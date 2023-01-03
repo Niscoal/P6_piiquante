@@ -2,9 +2,11 @@ const express = require("express");
 const mongoose = require("mongoose");
 
 const UserRoutes = require("./routes/user");
+const path = require("path");
 
 const app = express();
 
+mongoose.set("strictQuery", true);
 mongoose
     .connect(
         "mongodb+srv://niscoal:Gi50s9y0OOpyCkhd@cluster0.qzd5eor.mongodb.net/?retryWrites=true&w=majority",
@@ -27,7 +29,7 @@ app.use((req, res, next) => {
     );
     next();
 });
-
+app.use("/images", express.static(path.join(__dirname, "images")));
 app.use("/api/auth", UserRoutes);
 
 module.exports = app;
