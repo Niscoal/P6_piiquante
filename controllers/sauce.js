@@ -14,8 +14,6 @@ exports.createSauce = (req, res, next) => {
         }`,
         likes: 0,
         dislikes: 0,
-        usersLiked: [],
-        usersDisliked: [],
     });
     sauce
         .save()
@@ -94,5 +92,24 @@ exports.getOneSauce = (req, res, next) => {
 exports.getAllSauces = (req, res, next) => {
     Sauce.find()
         .then((sauces) => res.status(200).json(sauces))
+        .catch((error) => res.status(400).json({ error }));
+};
+
+exports.like = (req, res, next) => {
+    Sauce.findById(req.params.id)
+        .then((sauce) => {
+            console.log("like statut:", req.body.like);
+            switch (req.body.like) {
+                case 0:
+                    console.log("cas zero");
+                    break;
+                case 1:
+                    console.log("cas 1");
+                    break;
+                case -1:
+                    console.log("cas -1");
+                    break;
+            }
+        })
         .catch((error) => res.status(400).json({ error }));
 };
