@@ -23,8 +23,6 @@ exports.createSauce = (req, res, next) => {
         .catch((error) => {
             res.status(400).json({ error });
         });
-    console.log(sauceObject);
-    console.log(sauce);
 };
 
 // Sauce modification
@@ -104,10 +102,31 @@ exports.like = (req, res, next) => {
                     console.log("cas zero");
                     break;
                 case 1:
-                    console.log("cas 1");
+                    Sauce.updateOne(
+                        { _id: req.params.id },
+                        { $inc: { likes: 1 } },
+                        { $push: { usersLiked: req.body.userId } }
+                    )
+                        .then(() => {
+                            res.status(200).json({
+                                message: "Sauce likée !",
+                            });
+                        })
+                        .catch((error) => res.status(400).json({ error }));
                     break;
                 case -1:
                     console.log("cas -1");
+                    Sauce.updateOne(
+                        { _id: req.params.id },
+                        { $inc: { dislikes: 1 } },
+                        { $push: { usersdisliked: req.body.userId } }
+                    )
+                        .then(() => {
+                            res.status(200).json({
+                                message: "Sauce likée !",
+                            });
+                        })
+                        .catch((error) => res.status(400).json({ error }));
                     break;
             }
         })
