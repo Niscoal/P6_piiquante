@@ -104,8 +104,10 @@ exports.like = (req, res, next) => {
                 case 1:
                     Sauce.updateOne(
                         { _id: req.params.id },
-                        { $inc: { likes: 1 } },
-                        { $push: { usersLiked: req.body.userId } }
+                        {
+                            $inc: { likes: 1 },
+                            $push: { usersLiked: req.auth.userId },
+                        }
                     )
                         .then(() => {
                             res.status(200).json({
@@ -118,8 +120,10 @@ exports.like = (req, res, next) => {
                     console.log("cas -1");
                     Sauce.updateOne(
                         { _id: req.params.id },
-                        { $inc: { dislikes: 1 } },
-                        { $push: { usersdisliked: req.body.userId } }
+                        {
+                            $inc: { dislikes: 1 },
+                            $push: { usersDisliked: req.auth.userId },
+                        }
                     )
                         .then(() => {
                             res.status(200).json({

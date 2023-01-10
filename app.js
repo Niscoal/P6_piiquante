@@ -1,4 +1,7 @@
 const express = require("express");
+
+const dotenv = require("dotenv").config();
+
 const mongoose = require("mongoose");
 
 const userRoutes = require("./routes/user");
@@ -10,10 +13,10 @@ const app = express();
 
 mongoose.set("strictQuery", true);
 mongoose
-    .connect(
-        "mongodb+srv://niscoal:Gi50s9y0OOpyCkhd@cluster0.qzd5eor.mongodb.net/?retryWrites=true&w=majority",
-        { useNewUrlParser: true, useUnifiedTopology: true }
-    )
+    .connect(`${process.env.MONGODBSRV}`, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+    })
     .then(() => console.log("Connexion à MongoDB réussie !"))
     .catch(() => console.log("Connexion à MongoDB échouée !"));
 
