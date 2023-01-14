@@ -1,4 +1,4 @@
-# Lancer le backend:
+## Backend:
 
 -   Se placer dans le repertoire backend
 
@@ -7,3 +7,7 @@
 -   npm install pour installer toutes les dépendances
 
 -   Nodemon Server
+
+## Frontend
+
+Lien vers le repo : https://github.com/OpenClassrooms-Student-Center/Web-Developer-P6
