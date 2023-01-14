@@ -1,11 +1,16 @@
+// Accès au modèle Sauce
 const Sauce = require("../models/Sauce");
+
+// fs pour File System, module permettant d'intéragir avec les fichiers
 const fs = require("fs");
 
 // sauce creation by user with Sauce model then others specifieds parameters
 exports.createSauce = (req, res, next) => {
-    const sauceObject = JSON.parse(req.body.sauce);
+    const sauceObject = JSON.parse(req.body.sauce); // Accède aux données du formulaire de création Sauce
+    console.log(req.body.sauce);
     delete sauceObject._id;
     delete sauceObject._userId;
+    // Crée une nouvelle sauce avec les données formulaire + likes/dislikes
     const sauce = new Sauce({
         ...sauceObject,
         userId: req.auth.userId,
@@ -15,6 +20,7 @@ exports.createSauce = (req, res, next) => {
         likes: 0,
         dislikes: 0,
     });
+    // Sauvegarde la sauce
     sauce
         .save()
         .then(() => {
@@ -27,7 +33,7 @@ exports.createSauce = (req, res, next) => {
 
 // Sauce modification
 exports.modifySauce = (req, res, next) => {
-    const sauceObject = req.file
+    const sauceObject = req.file // Vérifie si présence de fichier
         ? {
               ...JSON.parse(req.body.sauce),
               imageUrl: `${req.protocol}://${req.get("host")}/images/${
@@ -37,7 +43,7 @@ exports.modifySauce = (req, res, next) => {
         : { ...req.body };
 
     delete sauceObject._userId;
-    Sauce.findOne({ _id: req.params.id })
+    Sauce.findOne({ _id: req.params.id }) // Atteint la sauce, la modifie et l'enregistre si l'utilisateur en a le droit
         .then((sauce) => {
             if (sauce.userId != req.auth.userId) {
                 res.status(401).json({ message: "Non-autorisé" });
@@ -55,11 +61,12 @@ exports.modifySauce = (req, res, next) => {
         .catch((error) => res.status(400).json({ error }));
 };
 
-// Sauce removal
+// Sauce removal (if the user is authorized)
 exports.deleteSauce = (req, res, next) => {
-    Sauce.findOne({ _id: req.params.id })
+    Sauce.findOne({ _id: req.params.id }) // Atteint la sauce
         .then((sauce) => {
             if (sauce.userId != req.auth.userId) {
+                //Empeche la suppression si non autorisé
                 res.status(401).json({ message: "Not authorized" });
             } else {
                 const filename = sauce.imageUrl.split("/images/")[1];
@@ -94,14 +101,15 @@ exports.getAllSauces = (req, res, next) => {
 };
 
 exports.like = (req, res, next) => {
-    Sauce.findById(req.params.id)
+    Sauce.findById(req.params.id) // Atteint la sauce
         .then((sauce) => {
-            console.log("like statut:", req.body.like);
+            // Met en place les 3 cas de like
             switch (req.body.like) {
-                case 0:
+                case 0: // Quand une sauce likée ou disilikée change d'état pour revenir à zero
                     Sauce.findOne({ _id: req.params.id })
                         .then((sauce) => {
                             if (sauce.usersLiked.includes(req.auth.userId)) {
+                                // Si la sauce est likée, enleve un like et retire l'UserId du tableau des likes
                                 Sauce.updateOne(
                                     { _id: req.params.id },
                                     {
@@ -119,6 +127,7 @@ exports.like = (req, res, next) => {
                                         res.status(400).json({ error })
                                     );
                             } else if (
+                                // Si la sauce est dislikée, enleve un dislike et retire l'UserId du tableau des dislikes
                                 sauce.usersDisliked.includes(req.auth.userId)
                             ) {
                                 Sauce.updateOne(
@@ -143,7 +152,7 @@ exports.like = (req, res, next) => {
                         })
                         .catch((error) => res.status(400).json({ error }));
                     break;
-                case 1:
+                case 1: // Set 1 au like et ajoute l'UserId au tableau des likes
                     Sauce.updateOne(
                         { _id: req.params.id },
                         {
@@ -159,7 +168,7 @@ exports.like = (req, res, next) => {
                         .catch((error) => res.status(400).json({ error }));
                     break;
                 case -1:
-                    console.log("cas -1");
+                    // Set 1 au dislike et ajoute l'UserId au tableau des dislikes
                     Sauce.updateOne(
                         { _id: req.params.id },
                         {

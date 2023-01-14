@@ -1,7 +1,8 @@
-const jwt = require("jsonwebtoken");
+const jwt = require("jsonwebtoken"); // Gestion des tokens
 
-const dotenv = require("dotenv").config();
+const dotenv = require("dotenv").config(); // Gère les variables d'environnement (planque les données sensibles)
 
+// Vérifie le token
 module.exports = (req, res, next) => {
     try {
         const token = req.headers.authorization.split(" ")[1];

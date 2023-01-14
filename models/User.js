@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const mongooseUniqueValidator = require("mongoose-unique-validator");
+const mongooseUniqueValidator = require("mongoose-unique-validator"); // Rend les champs uniques si demandé (email)
 
 const userShema = mongoose.Schema({
     email: { type: String, required: true, unique: true },
