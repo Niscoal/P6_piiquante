@@ -52,7 +52,7 @@ app.use(helmet({ crossOriginResourcePolicy: { policy: "same-site" } }));
 app.use(mongooseExpressErrorHandler);
 
 // Définit l'utilisation de morgan avec un format de journalisation de manière détaillée
-app.use(morgan("combined"));
+app.use(morgan("dev"));
 
 // Utilise CORS fourni par Express
 app.use(cors());
