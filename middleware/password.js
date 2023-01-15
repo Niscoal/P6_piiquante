@@ -29,7 +29,7 @@ module.exports = (req, res, next) => {
             error:
                 "Mot de passe trop faible :" +
                 JSON.stringify(
-                    schema.validate("req.body.password", { details: true })
+                    schema.validate(`${req.body.password}`, { details: true })
                 ),
         });
     }
