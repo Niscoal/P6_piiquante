@@ -3,7 +3,7 @@ const express = require("express"); // Utilisation d'Express
 const dotenv = require("dotenv").config(); // Gère les variables d'environnement (planque les données sensibles)
 const path = require("path"); // Manipule les chemins de fichier
 
-const helmet = require("helmet"); // Sécurité : Configure les headers
+const helmet = require("helmet"); // Sécurité : Configure les headers de réponse
 const cors = require("cors"); // Sécurité : gère les accès serveur depuis des origines
 const morgan = require("morgan"); // Log les requêtes HTTP du serveur
 const mongooseExpressErrorHandler = require("mongoose-express-error-handler"); // Remonte les erreurs Mongoose et les gère de manière centralisée
@@ -27,7 +27,7 @@ mongoose
 
 app.use(express.json()); // Permet de gérer les données requête envoyées sous forme de JSON : parse les données et les ajoute à l'objet req.body
 
-// // Définit les entêtes de manière basique : inutile si Helmet est configuré
+// Définit les entêtes de manière basique : inutile si Helmet est configuré
 // app.use((req, res, next) => {
 //     res.setHeader("Access-Control-Allow-Origin", "*");
 //     res.setHeader(
